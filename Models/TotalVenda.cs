@@ -9,7 +9,7 @@ namespace ControleDeEstoque.Models
     [Key]
     public int Id { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = "Este campo é obrigatório")]
     public decimal ValorVendido { get; set; }
 
     public int ProdutoId { get; set; }

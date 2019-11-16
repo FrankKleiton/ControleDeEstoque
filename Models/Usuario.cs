@@ -8,12 +8,12 @@ namespace ControleDeEstoque.Models
     [Key]
     public int Id { get; set; }
     
-    [Required]
-    [StringLength(100)]
+    [Required(ErrorMessage = "Este campo é obrigatório")]
+    [MaxLength(100, ErrorMessage = "Este campo deve ter no máximo 100 caracteres.")]
     public string Username { get; set; }
     
-    [Required]
-    [StringLength(100)]
+    [Required(ErrorMessage = "Este campo é obrigatório")]
+    [MaxLength(100, ErrorMessage = "Este campo deve ter no máximo 100 caracteres.")]
     public string Password { get; set; }
 
     public virtual ICollection<Produto> Produtos { get; set; }

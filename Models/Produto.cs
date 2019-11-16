@@ -8,18 +8,18 @@ namespace ControleDeEstoque.Models
     [Key]
     public int Id { get; set; }
 
-    [Required]
-    [StringLength(100)]
+    [Required(ErrorMessage = "Este campo é obrigatório")]
+    [MaxLength(100, ErrorMessage = "Este campo deve ter no máximo 100 caracteres.")]
     public string Nome { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = "Este campo é obrigatório")]
     public decimal Preco { get; set; }
 
-    [Required]
-    [StringLength(50)]
+    [Required(ErrorMessage = "Este campo é obrigatório")]
+    [MaxLength(50, ErrorMessage = "Este campo deve ter no máximo 50 caracteres.")]
     public string Tipo { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = "Este campo é obrigatório")]
     public int Quantidade { get; set; }
 
     [ForeignKey("Usuario")]
