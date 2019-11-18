@@ -27,7 +27,7 @@ namespace ControleDeEstoque.Models
     public virtual Usuario Usuario { get; set; }
 
     [ForeignKey("TotalVenda")]
-    public int TotalVendaId { get; set; }
+    public int? TotalVendaId { get; set; }
     public virtual TotalVenda TotalVenda { get; set; }
   }
 }

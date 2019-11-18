@@ -6,28 +6,29 @@ using System.Linq;
 using ControleDeEstoque.Servicos.Token;
 using System.Linq.Expressions;
 using System;
+using ControleDeEstoque.Servicos.Interfaces;
 
 namespace ControleDeEstoque.Controllers
 {
     [ApiController]
-    [Route("api/v1")]
+    [Route("api/usuario")]
     public class UsuarioController : ControllerBase
     {
-        private readonly Contexto _contexto;
+        private readonly IQueryDeUsuario _QueryDeUsuario;
 
-        public UsuarioController(Contexto contexto)
+        public UsuarioController(IQueryDeUsuario queryDeUsuario)
         {
-            _contexto = contexto;
+            _QueryDeUsuario = queryDeUsuario;
         }
 
         [HttpPost]
         [Route("login")]
         public async Task<ActionResult<dynamic>> Autenticar([FromBody] Usuario usuario)
         {
-            Usuario usuarioEncontrado = BuscarUsuario(usuario);
+            Usuario usuarioEncontrado = await _QueryDeUsuario.AutenticarUsuario(usuario);
 
             if (usuarioEncontrado == null)
-                return NotFound(new { message = "Usuário ou senha inseridos inválidos" });
+                return BadRequest(new { message = "Username ou senha inválidos" });
 
             var token = ServicoDeToken.GerarToken(usuario);
             usuario.Password = "";
@@ -39,16 +40,6 @@ namespace ControleDeEstoque.Controllers
             };
         }
 
-        private Usuario BuscarUsuario(Usuario usuario)
-        {
-            return _contexto.Usuarios.Where(ValidarDados(usuario)).FirstOrDefault();
-        }
-
-        private static Expression<Func<Usuario, bool>> ValidarDados(Usuario usuario)
-        {
-            return x => x.Username == usuario.Username && x.Password == usuario.Password;
-        }
-
         [HttpPost]
         [Route("cadastro")]
         public async Task<ActionResult<Usuario>> CadastrarUsuario([FromBody] Usuario usuario)
@@ -56,14 +47,8 @@ namespace ControleDeEstoque.Controllers
             if (!ModelState.IsValid)
                 return BadRequest("Dados Inválidos");
 
-            await SalvarUsuario(usuario);
+            await _QueryDeUsuario.SalvarUsuario(usuario);
             return Ok(new { message = "Dados salvos com sucesso!" });
-        }
-
-        private async Task SalvarUsuario(Usuario usuario)
-        {
-            await _contexto.Usuarios.AddAsync(usuario);
-            await _contexto.SaveChangesAsync();
         }
     }
 }

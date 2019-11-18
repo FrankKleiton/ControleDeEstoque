@@ -16,6 +16,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using ControleDeEstoque.Servicos.Interfaces;
+using ControleDeEstoque.Servicos.QuerieService;
 
 namespace ControleDeEstoque
 {
@@ -57,6 +59,7 @@ namespace ControleDeEstoque
                         ValidateAudience = false
                     };
                 });
+            services.AddScoped<IQueryDeUsuario, QueryDeUsuario>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -74,6 +77,8 @@ namespace ControleDeEstoque
                             .AllowAnyOrigin()
                             .AllowAnyMethod()
                             .AllowAnyHeader());
+
+                app.UseAuthentication();
 
                 app.UseAuthorization();
 

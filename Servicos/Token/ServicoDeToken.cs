@@ -19,7 +19,7 @@ namespace ControleDeEstoque.Servicos.Token
                 {
                     new Claim(ClaimTypes.Name, usuario.Username.ToString())
                 }),
-                Expires = DateTime.UtcNow.AddHours(2),
+                Expires = DateTime.UtcNow.AddHours(6),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(chave), SecurityAlgorithms.HmacSha256Signature
                 )
