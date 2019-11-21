@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -26,8 +27,8 @@ namespace ControleDeEstoque.Models
     public int UsuarioId { get; set; }
     public virtual Usuario Usuario { get; set; }
 
-    [ForeignKey("TotalVenda")]
+
     public int? TotalVendaId { get; set; }
-    public virtual TotalVenda TotalVenda { get; set; }
+    public virtual ICollection<TotalVenda> TotalVenda { get; set; }
   }
 }

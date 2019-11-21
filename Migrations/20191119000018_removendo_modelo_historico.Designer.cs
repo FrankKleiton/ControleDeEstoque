@@ -3,14 +3,16 @@ using System;
 using ControleDeEstoque.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ControleDeEstoque.Migrations
 {
     [DbContext(typeof(Contexto))]
-    partial class ContextoModelSnapshot : ModelSnapshot
+    [Migration("20191119000018_removendo_modelo_historico")]
+    partial class removendo_modelo_historico
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,6 +49,8 @@ namespace ControleDeEstoque.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("TotalVendaId");
+
                     b.HasIndex("UsuarioId");
 
                     b.ToTable("Produtos");
@@ -58,9 +62,6 @@ namespace ControleDeEstoque.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("Data")
-                        .HasColumnType("datetime(6)");
-
                     b.Property<int>("ProdutoId")
                         .HasColumnType("int");
 
@@ -68,8 +69,6 @@ namespace ControleDeEstoque.Migrations
                         .HasColumnType("decimal(65,30)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProdutoId");
 
                     b.ToTable("TotalVendas");
                 });
@@ -100,18 +99,13 @@ namespace ControleDeEstoque.Migrations
 
             modelBuilder.Entity("ControleDeEstoque.Models.Produto", b =>
                 {
+                    b.HasOne("ControleDeEstoque.Models.TotalVenda", "TotalVenda")
+                        .WithMany("Produto")
+                        .HasForeignKey("TotalVendaId");
+
                     b.HasOne("ControleDeEstoque.Models.Usuario", "Usuario")
                         .WithMany("Produtos")
                         .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ControleDeEstoque.Models.TotalVenda", b =>
-                {
-                    b.HasOne("ControleDeEstoque.Models.Produto", "Produto")
-                        .WithMany("TotalVenda")
-                        .HasForeignKey("ProdutoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

@@ -4,30 +4,33 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using ControleDeEstoque.Models;
 using ControleDeEstoque.Servicos.Interfaces;
+using CryptSharp;
 
 namespace ControleDeEstoque.Servicos.QuerieService
 {
     public class QueryDeUsuario : IQueryDeUsuario
     {
-        private readonly Contexto _contexto;
+        private readonly Contexto _Contexto;
         public QueryDeUsuario(Contexto contexto)
         {
-            _contexto = contexto;
+            _Contexto = contexto;
         }
-        public async Task<Usuario> AutenticarUsuario(Usuario usuario)
+        public Usuario AutenticarUsuario(Usuario usuario)
         {
-            return _contexto.Usuarios.Where(ValidarDados(usuario)).FirstOrDefault();
-        }
+            var u = _Contexto.Usuarios.Where(
+                x => x.Username == usuario.Username
+            ).FirstOrDefault();
 
-        private Expression<Func<Usuario, bool>> ValidarDados(Usuario usuario)
-        {
-            return x => x.Username == usuario.Username && x.Password == usuario.Password;
+            if (Crypter.CheckPassword(usuario.Password, u.Password))
+                return u;
+            return null;
         }
 
         public async Task SalvarUsuario(Usuario usuario)
         {
-            await _contexto.Usuarios.AddAsync(usuario);
-            await _contexto.SaveChangesAsync();
+            usuario.Password = Crypter.Sha256.Crypt(usuario.Password);
+            await _Contexto.Usuarios.AddAsync(usuario);
+            await _Contexto.SaveChangesAsync();
         }
     }
 }

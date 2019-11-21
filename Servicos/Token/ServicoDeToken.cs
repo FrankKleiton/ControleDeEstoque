@@ -17,7 +17,7 @@ namespace ControleDeEstoque.Servicos.Token
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, usuario.Username.ToString())
+                    new Claim(ClaimTypes.Name, usuario.Id.ToString()),
                 }),
                 Expires = DateTime.UtcNow.AddHours(6),
                 SigningCredentials = new SigningCredentials(

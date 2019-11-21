@@ -7,7 +7,7 @@ namespace ControleDeEstoque.Servicos.Interfaces
 {
     public interface IQueryDeUsuario
     {
-        Task<Usuario> AutenticarUsuario(Usuario usuario);
+        Usuario AutenticarUsuario(Usuario usuario);
         Task SalvarUsuario(Usuario usuario);
     }
 }

@@ -21,27 +21,25 @@ namespace ControleDeEstoque.Controllers
             _QueryDeUsuario = queryDeUsuario;
         }
 
-        [HttpPost]
-        [Route("login")]
+        [HttpPost("login")]
         public async Task<ActionResult<dynamic>> Autenticar([FromBody] Usuario usuario)
         {
-            Usuario usuarioEncontrado = await _QueryDeUsuario.AutenticarUsuario(usuario);
+            var usuarioEncontrado = _QueryDeUsuario.AutenticarUsuario(usuario);
 
             if (usuarioEncontrado == null)
                 return BadRequest(new { message = "Username ou senha inválidos" });
 
-            var token = ServicoDeToken.GerarToken(usuario);
-            usuario.Password = "";
+            var token = ServicoDeToken.GerarToken(usuarioEncontrado);
+            usuarioEncontrado.Password = "";
 
             return new
             {
-                user = usuario,
+                user = usuarioEncontrado,
                 token = token
             };
         }
 
-        [HttpPost]
-        [Route("cadastro")]
+        [HttpPost("cadastro")]
         public async Task<ActionResult<Usuario>> CadastrarUsuario([FromBody] Usuario usuario)
         {
             if (!ModelState.IsValid)
