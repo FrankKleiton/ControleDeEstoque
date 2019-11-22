@@ -36,7 +36,7 @@ namespace ControleDeEstoque.Servicos.QueryService
 
         public Produto BuscarPorNome(string nome, int usuarioId)
         {
-            return _Contexto.Produtos.Where(x =>
+            return _Contexto.Produto.Where(x =>
                 x.Nome == nome && x.UsuarioId == usuarioId
             ).FirstOrDefault();
         }
@@ -50,7 +50,7 @@ namespace ControleDeEstoque.Servicos.QueryService
 
         public async Task AdicionarProduto(Produto produto)
         {
-            await _Contexto.Produtos.AddAsync(produto);
+            await _Contexto.Produto.AddAsync(produto);
             await SalvarMudancas();
         }
 
@@ -69,49 +69,54 @@ namespace ControleDeEstoque.Servicos.QueryService
 
         public async Task<ICollection<Produto>> ListarProdutos(int usuarioId)
         {
-            return await _Contexto.Produtos.Where(
+            return await _Contexto.Produto.Where(
                 u => u.UsuarioId == usuarioId
             ).ToListAsync();
         }
 
-        public async Task<bool> RetirarProduto(string nome, int quantidade, int usuarioId)
+        public async Task<bool> RetirarProduto(int id, int quantidade, int usuarioId)
         {
-            var produto = BuscarPorNome(nome, usuarioId);
+            var produto = await BuscarPorId(id, usuarioId);
             if (produto.Quantidade < quantidade)
                 return false;
 
-            await ComputarVenda(quantidade, produto);
+            await ComputarSaida(quantidade, produto);
             return true;
         }
 
-        private async Task ComputarVenda(int quantidade, Produto produto)
+        private async Task ComputarSaida(int quantidade, Produto produto)
         {
-            TotalVenda venda = new TotalVenda();
+            SaidaEstoque venda = new SaidaEstoque();
             produto.Quantidade -= quantidade;
             venda.ValorVendido = quantidade * produto.Preco;
             venda.ProdutoId = produto.Id;
             venda.Data = DateTime.UtcNow;
-            await _Contexto.TotalVendas.AddAsync(venda);
+            venda.Quantidade = quantidade;
+            await _Contexto.SaidaEstoque.AddAsync(venda);
             await _Contexto.SaveChangesAsync();
         }
 
-        public async Task IncrementarQuantidade(string nomeDoProduto,
+        public async Task IncrementarQuantidade(int id,
                                                 int quantidade,
                                                 int usuarioId)
         {
-            Produto produto = BuscarPorNome(nomeDoProduto, usuarioId);
+            Produto produto = await BuscarPorId(id, usuarioId);
             produto.Quantidade += quantidade;
             await SalvarMudancas();
         }
 
         public async Task<Produto> BuscarPorId(int id, int usuarioId)
         {
-            return _Contexto.Produtos.Where(x => x.UsuarioId == usuarioId && x.UsuarioId == usuarioId).SingleOrDefault();
+            return _Contexto.Produto.Where(x => x.Id == id && x.UsuarioId == usuarioId).SingleOrDefault();
         }
 
-        public async Task AtualizarProduto(Produto produto)
+        public async Task AtualizarProduto(int id, int usuarioId, Produto produto)
         {
-            _Contexto.Entry(produto).State = EntityState.Modified;
+            var produtoBuscado = await BuscarPorId(id, usuarioId);
+            produtoBuscado.Nome = produto.Nome;
+            produtoBuscado.Preco = produto.Preco;
+            produtoBuscado.Tipo = produto.Tipo;
+            produtoBuscado.Quantidade = produto.Quantidade;
             await SalvarMudancas();
         }
     }

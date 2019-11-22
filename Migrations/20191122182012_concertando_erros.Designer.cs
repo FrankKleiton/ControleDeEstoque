@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ControleDeEstoque.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20191119210029_alterando_chaves_estrangeiras")]
-    partial class alterando_chaves_estrangeiras
+    [Migration("20191122182012_concertando_erros")]
+    partial class concertando_erros
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -51,16 +51,22 @@ namespace ControleDeEstoque.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("Produtos");
+                    b.ToTable("Produto");
                 });
 
-            modelBuilder.Entity("ControleDeEstoque.Models.TotalVenda", b =>
+            modelBuilder.Entity("ControleDeEstoque.Models.SaidaEstoque", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("Data")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<int>("ProdutoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantidade")
                         .HasColumnType("int");
 
                     b.Property<decimal>("ValorVendido")
@@ -70,7 +76,7 @@ namespace ControleDeEstoque.Migrations
 
                     b.HasIndex("ProdutoId");
 
-                    b.ToTable("TotalVendas");
+                    b.ToTable("SaidaEstoque");
                 });
 
             modelBuilder.Entity("ControleDeEstoque.Models.Usuario", b =>
@@ -94,7 +100,7 @@ namespace ControleDeEstoque.Migrations
                     b.HasIndex("Username")
                         .IsUnique();
 
-                    b.ToTable("Usuarios");
+                    b.ToTable("Usuario");
                 });
 
             modelBuilder.Entity("ControleDeEstoque.Models.Produto", b =>
@@ -106,7 +112,7 @@ namespace ControleDeEstoque.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ControleDeEstoque.Models.TotalVenda", b =>
+            modelBuilder.Entity("ControleDeEstoque.Models.SaidaEstoque", b =>
                 {
                     b.HasOne("ControleDeEstoque.Models.Produto", "Produto")
                         .WithMany("TotalVenda")

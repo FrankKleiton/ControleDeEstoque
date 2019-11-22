@@ -49,10 +49,10 @@ namespace ControleDeEstoque.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("Produtos");
+                    b.ToTable("Produto");
                 });
 
-            modelBuilder.Entity("ControleDeEstoque.Models.TotalVenda", b =>
+            modelBuilder.Entity("ControleDeEstoque.Models.SaidaEstoque", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -64,6 +64,9 @@ namespace ControleDeEstoque.Migrations
                     b.Property<int>("ProdutoId")
                         .HasColumnType("int");
 
+                    b.Property<int>("Quantidade")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("ValorVendido")
                         .HasColumnType("decimal(65,30)");
 
@@ -71,7 +74,7 @@ namespace ControleDeEstoque.Migrations
 
                     b.HasIndex("ProdutoId");
 
-                    b.ToTable("TotalVendas");
+                    b.ToTable("SaidaEstoque");
                 });
 
             modelBuilder.Entity("ControleDeEstoque.Models.Usuario", b =>
@@ -95,7 +98,7 @@ namespace ControleDeEstoque.Migrations
                     b.HasIndex("Username")
                         .IsUnique();
 
-                    b.ToTable("Usuarios");
+                    b.ToTable("Usuario");
                 });
 
             modelBuilder.Entity("ControleDeEstoque.Models.Produto", b =>
@@ -107,7 +110,7 @@ namespace ControleDeEstoque.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ControleDeEstoque.Models.TotalVenda", b =>
+            modelBuilder.Entity("ControleDeEstoque.Models.SaidaEstoque", b =>
                 {
                     b.HasOne("ControleDeEstoque.Models.Produto", "Produto")
                         .WithMany("TotalVenda")

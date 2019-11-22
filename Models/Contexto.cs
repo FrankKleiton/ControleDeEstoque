@@ -4,9 +4,9 @@ namespace ControleDeEstoque.Models
 {
   public class Contexto : DbContext
   {
-    public DbSet<Usuario> Usuarios { get; set; }
-    public DbSet<Produto> Produtos { get; set; }
-    public DbSet<TotalVenda> TotalVendas { get; set; }
+    public DbSet<Usuario> Usuario { get; set; }
+    public DbSet<Produto> Produto { get; set; }
+    public DbSet<SaidaEstoque> SaidaEstoque { get; set; }
     
     public Contexto(DbContextOptions<Contexto> options) : base(options)
     {

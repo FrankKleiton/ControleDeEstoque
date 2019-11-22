@@ -12,12 +12,12 @@ namespace ControleDeEstoque.Controllers
 {
     [ApiController]
     [Route("api/totalvenda")]
-    public class TotalVendaController : ControllerBase
+    public class SaidaEstoqueController : ControllerBase
     {
         private readonly Contexto _Contexto;
         private readonly IQueryDeProduto _QueryDeProduto;
         
-        public TotalVendaController(Contexto contexto, IQueryDeProduto queryDeProduto)
+        public SaidaEstoqueController(Contexto contexto, IQueryDeProduto queryDeProduto)
         {
             _Contexto = contexto;
             _QueryDeProduto = queryDeProduto;
@@ -25,11 +25,11 @@ namespace ControleDeEstoque.Controllers
 
         [Authorize]
         [HttpGet("listar/{nomeProduto}")]
-        public async Task<ICollection<TotalVenda>> GetTotalVenda(string nomeProduto)
+        public async Task<ICollection<SaidaEstoque>> GetTotalVenda(string nomeProduto)
         {
             int usuarioId = Convert.ToInt32(User.Identity.Name);
             var produto = _QueryDeProduto.BuscarPorNome(nomeProduto, usuarioId);
-            return await _Contexto.TotalVendas.Where(t => t.ProdutoId == produto.Id).ToListAsync();
+            return await _Contexto.SaidaEstoque.Where(t => t.ProdutoId == produto.Id).ToListAsync();
         }
     }
 }

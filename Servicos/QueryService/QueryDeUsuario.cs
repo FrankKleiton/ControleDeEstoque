@@ -17,7 +17,7 @@ namespace ControleDeEstoque.Servicos.QuerieService
         }
         public Usuario AutenticarUsuario(Usuario usuario)
         {
-            var u = _Contexto.Usuarios.Where(
+            var u = _Contexto.Usuario.Where(
                 x => x.Username == usuario.Username
             ).FirstOrDefault();
 
@@ -29,7 +29,7 @@ namespace ControleDeEstoque.Servicos.QuerieService
         public async Task SalvarUsuario(Usuario usuario)
         {
             usuario.Password = Crypter.Sha256.Crypt(usuario.Password);
-            await _Contexto.Usuarios.AddAsync(usuario);
+            await _Contexto.Usuario.AddAsync(usuario);
             await _Contexto.SaveChangesAsync();
         }
     }

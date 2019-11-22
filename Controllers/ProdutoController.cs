@@ -44,30 +44,21 @@ namespace ControleDeEstoque.Controllers
         }
 
         [Authorize]
-        [HttpPatch("adicionar/{nomeDoProduto}/{quantidade}")]
-        public async Task<ActionResult> AdicionarProdutos(string nomeDoProduto, 
+        [HttpPatch("adicionar/{id}/{quantidade}")]
+        public async Task<ActionResult> AdicionarProdutos(int id,
                                                               int quantidade)
         {
-            if (nomeDoProduto == null || nomeDoProduto.Trim() == string.Empty ||                quantidade == 0)
-            {
-                return BadRequest(
-                    new { message = "Insira o nome do produto" }
-                );
-            }
-
-            nomeDoProduto = TratarString(nomeDoProduto);
             var usuarioId = GetIdDoUsuario();
-
             try
             {
                 await _QueryDeProduto.IncrementarQuantidade(
-                    nomeDoProduto, quantidade, usuarioId
+                    id, quantidade, usuarioId
                 );
                 return Ok(new { message = "Quantidade incrementada com sucesso..." });
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                return BadRequest(new { message= "Erro ao incrementar..." });
+                return BadRequest(new { message = "Erro ao incrementar: " + ex.Message });
             }
         }
 
@@ -85,20 +76,20 @@ namespace ControleDeEstoque.Controllers
         }
 
         [Authorize]
-        [HttpGet("retirar/{nome}/{quantidade}")]
-        public async Task<ActionResult> RetirarProduto(string nome, int quantidade)
+        [HttpGet("retirar/{id}/{quantidade}")]
+        public async Task<ActionResult> RetirarProduto(int id, int quantidade)
         {
-            if (nome == null || nome.Trim() == string.Empty || quantidade == 0)
+            if (quantidade == 0)
             {
                 return BadRequest(
                     new { message = "Insira o nome do produto" }
                 );
             }
-            nome = TratarString(nome);
+
             var usuarioId = GetIdDoUsuario();
             try
             {
-                if (await _QueryDeProduto.RetirarProduto(nome, quantidade, usuarioId))
+                if (await _QueryDeProduto.RetirarProduto(id, quantidade, usuarioId))
                     return Ok(new { message = "Quantia decrementada com sucesso!" });
             }
             catch (Exception ex)
@@ -133,23 +124,24 @@ namespace ControleDeEstoque.Controllers
             Produto produto = await _QueryDeProduto.BuscarPorId(id, usuarioId);
             return produto;
         }
-        
+
         [Authorize]
         [HttpPut("atualizar/{id}")]
-        public async Task<ActionResult<Produto>> AtualizarProduto(Produto produto)
+        public async Task<ActionResult<Produto>> AtualizarProduto(int id, Produto produto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(new { message = "Erro durante inserção" });
 
             try
             {
-                await _QueryDeProduto.AtualizarProduto(produto);
+                var usuarioId = GetIdDoUsuario();
+                await _QueryDeProduto.AtualizarProduto(id, usuarioId, produto); 
+                return Ok(new { message = "Dados atualizados com sucesso!"});
             }
             catch (Exception ex)
             {
                 return BadRequest(new { message = "Erro ao Atualizar: " + ex.Message });
             }
-            return BadRequest(new { message = "Não foi possível atualizar os dados..." });
         }
 
     }

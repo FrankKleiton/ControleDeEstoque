@@ -29,6 +29,6 @@ namespace ControleDeEstoque.Models
 
 
     public int? TotalVendaId { get; set; }
-    public virtual ICollection<TotalVenda> TotalVenda { get; set; }
+    public virtual ICollection<SaidaEstoque> TotalVenda { get; set; }
   }
 }
