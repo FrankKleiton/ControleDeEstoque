@@ -46,7 +46,7 @@ namespace ControleDeEstoque.Controllers
         [Authorize]
         [HttpPatch("adicionar/{id}/{quantidade}")]
         public async Task<ActionResult> AdicionarProdutos(int id,
-                                                              int quantidade)
+                                                          int quantidade)
         {
             var usuarioId = GetIdDoUsuario();
             try

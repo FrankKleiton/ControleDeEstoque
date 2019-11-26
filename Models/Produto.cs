@@ -28,7 +28,7 @@ namespace ControleDeEstoque.Models
     public virtual Usuario Usuario { get; set; }
 
 
-    public int? TotalVendaId { get; set; }
-    public virtual ICollection<SaidaEstoque> TotalVenda { get; set; }
+    public int? SaidaEstoqueId { get; set; }
+    public virtual ICollection<SaidaEstoque> SaidaEstoque { get; set; }
   }
 }

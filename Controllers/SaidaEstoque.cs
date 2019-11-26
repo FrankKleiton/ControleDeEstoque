@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 namespace ControleDeEstoque.Controllers
 {
     [ApiController]
-    [Route("api/totalvenda")]
+    [Route("api/saidaestoque")]
     public class SaidaEstoqueController : ControllerBase
     {
         private readonly Contexto _Contexto;
@@ -24,12 +24,12 @@ namespace ControleDeEstoque.Controllers
         }
 
         [Authorize]
-        [HttpGet("listar/{nomeProduto}")]
-        public async Task<ICollection<SaidaEstoque>> GetTotalVenda(string nomeProduto)
+        [HttpGet("listar/{idProduto}")]
+        public async Task<ICollection<SaidaEstoque>> GetSaidasEstoques(int idProduto)
         {
             int usuarioId = Convert.ToInt32(User.Identity.Name);
-            var produto = _QueryDeProduto.BuscarPorNome(nomeProduto, usuarioId);
-            return await _Contexto.SaidaEstoque.Where(t => t.ProdutoId == produto.Id).ToListAsync();
+            var produto = _QueryDeProduto.BuscarPorId(idProduto, usuarioId);
+            return await _Contexto.SaidaEstoque.Where(t => t.Id == produto.Id).ToListAsync();
         }
     }
 }
